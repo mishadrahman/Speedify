@@ -205,7 +205,7 @@ export class SpeedTestEngine {
             await fetch(`${this.uploadUrl}?cb=${Math.random()}`, {
               method: 'POST',
               body: payload,
-              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
               cache: 'no-store',
               signal: this.abortController?.signal
             });
