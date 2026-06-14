@@ -1,0 +1,6 @@
+{
+  "name": "Speedify",
+  "description": "Serverless Internet Speed Test using Cloudflare R2 and advanced metrics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
