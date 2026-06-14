@@ -193,11 +193,12 @@ export class SpeedTestEngine {
       let finalSpeed = 0;
       let activeThreads = threads;
 
-      // NOTE: Using a plain text string payload instead of binary.
-      // Binary data triggers browser CORS Preflight (OPTIONS request), which blocks the upload.
-      // Plain text bypasses this and safely uploads to Cloudflare's free edge network!
+      // Create an empty ArrayBuffer, wrap it in a Blob with text/plain type.
+      // This forces the browser to send as a simple request (no CORS preflight)
+      // and avoids string encoding overheads.
       const payloadSize = 2 * 1024 * 1024; // 2MB chunk
-      const payload = '0'.repeat(payloadSize);
+      const buffer = new Uint8Array(payloadSize);
+      const payload = new Blob([buffer], { type: 'text/plain' });
 
       const runStream = async (threadIndex: number) => {
         while (this.active && (performance.now() - startTime < testDuration)) {
@@ -205,7 +206,6 @@ export class SpeedTestEngine {
             await fetch(`${this.uploadUrl}?cb=${Math.random()}`, {
               method: 'POST',
               body: payload,
-              headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
               cache: 'no-store',
               signal: this.abortController?.signal
             });
